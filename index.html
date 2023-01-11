@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat Box</title>
+</head>
+<body>
+    <div id="chat-box">
+    <div id="conversation"></div>
+    <form>
+        <input type="text" id="input">
+        <button type="submit" id="submit">Submit</button>
+    </form>
+</div>
+<style>
+  #chat-box {
+
+    width: 50%;
+
+    margin: 0 auto;
+
+    padding: 20px;
+
+    border: 1px solid #ddd;
+
+}
+
+#conversation {
+
+    height: 200px;
+
+    overflow: auto;
+
+}
+  </style>
+  <script>
+    
+    const conversation = document.getElementById("conversation");
+const input = document.getElementById("input");
+const submit = document.getElementById("submit");
+
+submit.addEventListener("click", function(e) {
+    e.preventDefault();
+
+    // Send the user's input to the OpenAI API
+    fetch("https://api.openai.com/v1/engines/davinci/completions", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer YOUR_API_KEY"
+        },
+        body: JSON.stringify({
+            prompt: input.value,
+            max_tokens: 100
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Display the response in the chat box
+        conversation.innerHTML += `<p>User: ${input.value}</p>`;
+        conversation.innerHTML += `<p>Chatbot: ${data.choices[0].text}</p>`;
+    });
+
+    input.value = "";
+});
+
+    
+    </script>
+</body>
+</html>
